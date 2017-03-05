@@ -7,7 +7,9 @@ public class ShipMovement : MonoBehaviour
 
     [Header("Variables")]
     public float speed = 0.8f;
-    public float turnSpeed = 0.15f;
+	public float turnSpeed = 0.3f;
+	public float turnConstraint = 0.15f;
+    public Quaternion currentRotation;
 
     [HideInInspector]
     public bool allowInput = false;
@@ -28,8 +30,26 @@ public class ShipMovement : MonoBehaviour
             {
                 rb.AddRelativeForce(Vector3.forward * speed);
             }
-            rb.AddRelativeTorque((Input.GetAxis("Vertical")) * turnSpeed, 0, 0); // W key or the up arrow to turn upwards, S or the down arrow to turn downwards.
-            rb.AddRelativeTorque(0, (Input.GetAxis("Horizontal")) * turnSpeed, 0); // A or left arrow to turn left, D or right arrow to turn right. } 
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                transform.Rotate(Vector3.back, -turnSpeed * Time.deltaTime);
+                transform.Rotate(Vector3.up, -turnSpeed * Time.deltaTime);
+            }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                transform.Rotate(Vector3.back, turnSpeed * Time.deltaTime);
+                transform.Rotate(Vector3.down, -turnSpeed * Time.deltaTime);
+            }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                transform.Rotate(Vector3.left, turnSpeed * Time.deltaTime);
+            }
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                transform.Rotate(Vector3.right, turnSpeed * Time.deltaTime);
+            }
+            currentRotation = transform.rotation;
         }
     }
 }
+
